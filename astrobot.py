@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# AstroBlash
+# AstroBit
 # Pwn2Win2019
 # author: code@pauloklaus.com.br
 # greetz: alisson@bertochi.com.br, mateuscc2@gmail.com
@@ -123,7 +123,7 @@ class Astro(object):
     def collided(self, x):
         if self.y != MAX_Y:
             return AstroStatus.FALLING_DOWN
-        
+
         if self.x == x:
             self.window.addstr(self.y, self.x, "X")
             if self.char == self.TARGET_CHAR:
@@ -296,12 +296,11 @@ if __name__ == '__main__':
         if event in [KEY_ESC, KEY_Q1, KEY_Q2]:
             break
 
-        gameBoard.collided(ship.getX)
-        # if gameBoard.collided(ship.getX):
-        #     break
+        if gameBoard.collided(ship.getX):
+            break
 
-        # if gameBoard.timeAchieved():
-        #    break
+        if gameBoard.timeAchieved():
+            break
 
         ship.update()
         gameBoard.update()

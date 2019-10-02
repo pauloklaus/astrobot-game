@@ -1,4 +1,4 @@
-# Astrobit Leet Edition
+# AstroBot Leet Edition
 
 [Pwn2Win 2019](https://pwn2.win/2019)
 
