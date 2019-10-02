@@ -4,7 +4,7 @@
 # AstroBlash
 # Pwn2Win2019
 # author: code@pauloklaus.com.br
-# greetz: alisson@bertochi.com.br
+# greetz: alisson@bertochi.com.br, mateuscc2@gmail.com
 
 import curses
 from curses import KEY_RIGHT, KEY_LEFT
@@ -15,8 +15,8 @@ import locale
 
 locale.setlocale(locale.LC_ALL, '')
 
-WIDTH = 30
-HEIGHT = 12
+WIDTH = 40
+HEIGHT = 15
 MAX_X = WIDTH - 2
 MAX_Y = HEIGHT - 2
 FLAG = "[xxFLAGxx]"
@@ -28,7 +28,7 @@ KEY_ENTER = 10
 KEY_SPACE = 32
 
 class Ship(object):
-    REFRESH = 0.03
+    REFRESH = 0.02
 
     def __init__(self, window, char='V'):
         self.window = window
@@ -87,9 +87,9 @@ class AstroStatus(Enum):
     LOST = 4
 
 class Astro(object):
-    REFRESH = 0.05
+    REFRESH = 0.03
     TARGET_CHAR = "*"
-    CHARS = ['+', 'u', 'W', 'T']
+    CHARS = ['U', 'W', 'T']
 
     def __init__(self, window, y, x, captureChar=False):
         self.window = window
@@ -240,15 +240,45 @@ if __name__ == '__main__':
     curses.curs_set(0)
     window.border(0)
 
-    asLeft3 = [[0,2], [-5,6,True], [-2,9]]
-    asRight4 = [[0,MAX_X-2], [-3,MAX_X-4], [-7,MAX_X-7]]
-    asLeftRight7 = asLeft3 + asRight4
+    asLeftBorder1 = [[-2,1]]
+    asLeftBorder2 = asLeftBorder1 + [[-8,1]]
+
+    asRightBorder1 = [[-2,38]]
+    asRightBorder2 = asRightBorder1 + [[-8,38]]
+
+    asPyramid7 = [[-9,1], [-9,4], [-12,9], [-15,14], [-18,19], [-15,24], [-12,29], [-9,34], [-9,38]]
+    asInversePyramid5 = [[-6,9], [-3,14], [0,19], [-3,24], [-6,29]]
+    asIrregularDiamondstar = asInversePyramid5 + [[-9,19,True]] + asPyramid7
+
+    asLeftDiagonalLine1 = [[0,33], [-2,27,True], [-4,21], [-6,15], [-8,9]]
+    asRightDoubleDiagonal = [[-10,3], [-10,18], [-12,9], [-12,24], [-14,15], [-14,30], [-16,21], [-16,36]]
+    asLeftDiagonalLine2 = [[-18,30], [-20,24], [-22,18,True], [-24,12], [-26,6]]
+    asDoubleBoomerang = asLeftDiagonalLine1 + asRightDoubleDiagonal + asLeftDiagonalLine2
+
+    asLeetL = [[0,3], [0,5], [0,7], [0,9], [-2,3], [-4,3], [-6,3], [-8,3]]
+    asLeetE1 = [[-6,12], [-6,14], [-6,16], [-8,12], [-10,12], [-10,14], [-10,16], [-12,12], [-14,12,True], [-14,14], [-14,16]]
+    asLeetE2 = [[-12,21], [-12,23], [-12,25], [-14,21], [-16,21], [-16,23], [-16,25], [-18,21], [-20,21], [-20,23], [-20,25]]
+    asLeetT = [[-18,32], [-20,32], [-22,32], [-24,32], [-26,28], [-26,30], [-26,32], [-26,34], [-26,36]]
+    asLeet = asLeetL + asLeetE1 + asLeetE2 + asLeetT
+
+    asLeftTriangle = [[0,1], [-2,1], [-4,1], [-6,1], [-8,1], [-1,4], [-1,8], [-2,12], [-3,16], [-5,16], [-6,12], [-7,8], [-7,4]]
+    asRightTriangle = [[0,38], [-2,38], [-4,38], [-6,38], [-8,38], [-1,34], [-1,30], [-2,26], [-3,22], [-5,22], [-6,26], [-7,30], [-7,34]]
+    asHourGlass = asLeftTriangle + [[-4,19,True]] + asRightTriangle
+
+    asMazeLeft1 = [[-3,7], [-2,9], [-1,11], [0,13], [-1,15], [-2,17], [-3,19]]
+    asMazeRight1 = [[-8,19], [-7,21], [-6,23], [-5,25], [-6,27], [-7,29], [-8,31]]
+    asMazeLeft2 = [[-13,7], [-12,9], [-11,11], [-10,13], [-11,15], [-12,17], [-13,19,True]]
+    asMazeRight2 = [[-18,19], [-17,21], [-16,23], [-15,25], [-16,27], [-17,29], [-18,31]]
+    asMaze = asMazeLeft1 + asMazeRight1 + asMazeLeft2 + asMazeRight2
 
     ship = Ship(window)
     gameBoard = GameBoard(window, [
-        asLeft3,
-        asRight4,
-        asLeftRight7
+        asPyramid7,
+        asIrregularDiamondstar,
+        asDoubleBoomerang,
+        asLeet,
+        asHourGlass,
+        asMaze
     ])
 
     while True:
@@ -266,11 +296,12 @@ if __name__ == '__main__':
         if event in [KEY_ESC, KEY_Q1, KEY_Q2]:
             break
 
-        if gameBoard.collided(ship.getX):
-            break
+        gameBoard.collided(ship.getX)
+        # if gameBoard.collided(ship.getX):
+        #     break
 
-        if gameBoard.timeAchieved():
-           break
+        # if gameBoard.timeAchieved():
+        #    break
 
         ship.update()
         gameBoard.update()
